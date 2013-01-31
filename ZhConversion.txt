@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Simplified / Traditional Chinese conversion tables
  *
