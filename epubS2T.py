@@ -54,6 +54,18 @@ class App(tk.Frame):
     self.selectButton = tk.Button(self, text=self.BTN1, state=tk.DISABLED, command=self.select)
     self.selectButton.pack(side=tk.RIGHT, padx=5, pady=5)
 
+    #testButton = tk.Button(self, text="TEST", command=self.TEST)
+    #testButton.pack(padx=5, pady=5)
+
+  def TEST(self):
+    self.println("foo")
+    self.println("bar")
+    self.text.configure(state=tk.NORMAL)
+    foo = self.text.index(tk.END)
+    foo = float(int(foo.split('.')[0]) - 1)
+    self.text.delete(foo-1, foo)
+    self.text.configure(state=tk.DISABLED)
+
   def init(self):
     if not os.path.exists(self.TXT):
       self.println(u'找不到詞庫(%s), 自動下載' % self.TXT)
@@ -81,19 +93,22 @@ class App(tk.Frame):
   def select(self):
     dirname = tkFileDialog.askdirectory(parent=self.parent, initialdir='/', title='選擇 *.epub 資料夾')
     self.convert(dirname)
+    self.println(u'轉檔結束')
 
   def convert(self, dirname):
     for epub_file in glob.glob(dirname + r'/*.epub'):
       epub_file_name, epub_ext_name = os.path.splitext(epub_file)
       target_dir = epub_file_name
       epub_s2t_file = epub_file_name + '_s2t.epub'
-      self.println(u'原檔案: %s' % epub_file_name)
+      self.println(u'原檔案: %s' % epub_file)
+      cnt = 0
       # extract epub file to temp folder
       zipfile.ZipFile(epub_file).extractall(target_dir)
       # convert s2t
       for base, dirs, files in os.walk(target_dir):
         for file in files:
-          self.println(file)
+          self.println(u'處理 %s 中...' % file, replace=cnt)
+          cnt += 1
           fn = os.path.join(base, file)
           name, ext = os.path.splitext(fn) 
           if ext in ['.opf', '.xhtml', '.ncx', '.html', '.plist']: # convert
@@ -126,9 +141,7 @@ class App(tk.Frame):
       zip.close()
       # remove the temp folder 
       shutil.rmtree(target_dir)
-      self.println(u'新檔案: %s' % epub_s2t_file)
-
-
+      self.println(u'新檔案: %s' % epub_s2t_file, replace=True)
 
   def downloadTXT(self):
     self.println(u'下載 %s' % self.TXT)
@@ -138,8 +151,12 @@ class App(tk.Frame):
     output.close()
     self.println(u'下載完畢')
 
-  def println(self, s):
+  def println(self, s, replace=False):
     self.text.configure(state=tk.NORMAL)
+    if replace:
+      foo = self.text.index(tk.END)
+      foo = float(int(foo.split('.')[0]) - 1)
+      self.text.delete(foo - 1, foo)
     self.text.insert(tk.END, '> %s\n' % s)
     self.text.configure(state=tk.DISABLED)
     self.text.update()
@@ -156,7 +173,6 @@ class App(tk.Frame):
           break
       i += 1
     return string
-
 
 def main():
   root = tk.Tk()
