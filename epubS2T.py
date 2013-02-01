@@ -162,12 +162,10 @@ class App(tk.Frame):
 
   def println(self, s):
     self.text.configure(state=tk.NORMAL)
-    self.text.insert(tk.INSERT, '%s\r\n' % s)
+    self.text.insert(tk.INSERT, '%s\n' % s)
     self.text.configure(state=tk.DISABLED)
-    print self.scroll.get()
-    self.scroll.set(0.9, 1.0)
-    # TODO: set scrollbar
-
+    self.text.update()
+    self.text.see(tk.END)
 
 def main():
   root = tk.Tk()
