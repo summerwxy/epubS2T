@@ -176,6 +176,7 @@ class App(tk.Frame):
 
 def main():
   root = tk.Tk()
+  root.iconbitmap(default='open_book.ico')
   app = App(root)
   root.mainloop()
 
