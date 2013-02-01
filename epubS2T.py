@@ -95,21 +95,18 @@ def main_old():
     shutil.rmtree(target_dir)
 
 class App(tk.Frame):
-  TITLE = 'epubS2T v0.1 - by 0_o'
-  TXT = 'ZhConversion.txt'
-  URL = 'http://svn.wikimedia.org/svnroot/mediawiki/trunk/phase3/includes/ZhConversion.php'
-  HEAD = '*.epub 簡體->繁體'
-  BTN1 = '選擇目錄'
-  BTN2 = '更新詞庫'
+  TITLE = u'epubS2T v0.1 - by 0_o'
+  TXT = u'ZhConversion.txt'
+  URL = u'http://svn.wikimedia.org/svnroot/mediawiki/trunk/phase3/includes/ZhConversion.php'
+  HEAD = u'*.epub 簡體->繁體'
+  BTN1 = u'選擇 *.epub 目錄'
+  BTN2 = u'更新詞庫'
 
   def __init__(self, parent):
     tk.Frame.__init__(self, parent)
     self.parent = parent
     self.initUI()
     self.init()
-    # download ZhConversion.txt if not exist
-    #if not os.path.exists(self.TXT):
-    #  self.downloadTXT()
 
   def initUI(self):
     self.parent.title(self.TITLE)
@@ -121,10 +118,7 @@ class App(tk.Frame):
     x = (sw - w) / 2
     y = (sh - h) / 2
     self.parent.geometry('%dx%d+%d+%d' % (w, h, x, y))
-    # style
-    #self.style = ttk.Style()
-    #self.style.theme_use('default')
-    
+
     self.pack(fill=tk.BOTH, expand=1)
 
     headerLabel = tk.Label(self, text=self.HEAD)
@@ -146,23 +140,26 @@ class App(tk.Frame):
     self.convertButton.pack(side=tk.RIGHT, padx=5, pady=5)
 
   def init(self):
+    if not os.path.exists(self.TXT):
+      self.println(u'找不到詞庫(%s), 自動下載' % self.TXT)
+      self.downloadTXT()
     self.convertButton.configure(state=tk.NORMAL)
 
   def convert(self):
-    #self.text.set('123123') 
-    #print dir(self.text)
     self.println('yo yo yo ')
 
 
   def downloadTXT(self):
+    self.println(u'下載 %s' % self.TXT)
     response = urllib2.urlopen(self.URL)
     output = open(self.TXT, 'wb')
     output.write(response.read())
     output.close()
+    self.println(u'下載完畢')
 
   def println(self, s):
     self.text.configure(state=tk.NORMAL)
-    self.text.insert(tk.INSERT, '%s\n' % s)
+    self.text.insert(tk.INSERT, '> %s\n' % s)
     self.text.configure(state=tk.DISABLED)
     self.text.update()
     self.text.see(tk.END)
