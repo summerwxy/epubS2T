@@ -176,7 +176,8 @@ class App(tk.Frame):
 
 def main():
   root = tk.Tk()
-  root.iconbitmap(default='open_book.ico')
+  if os.path.exists('open_book.ico'):
+    root.iconbitmap(default='open_book.ico')
   app = App(root)
   root.mainloop()
 
