@@ -7,7 +7,7 @@ import glob
 import shutil
 import zipfile
 import urllib2
-import Tkinter, ttk, tkFileDialog
+import Tkinter as tk, ttk, tkFileDialog
 
 def conv(string, dic):
   i = 0
@@ -43,7 +43,7 @@ def main_old():
   # =================================================
   # TODO: 指定目錄底下的所有 epub 檔案 簡體轉繁體, 包含檔案名稱
   # select ebook folder
-  root = Tkinter.Tk()
+  root = tk.Tk()
   root.withdraw()
   dirname = tkFileDialog.askdirectory(parent=root, initialdir='/', title='Please select a directory')
 
@@ -94,7 +94,7 @@ def main_old():
     # remove the temp folder 
     shutil.rmtree(target_dir)
 
-class App(Tkinter.Frame):
+class App(tk.Frame):
   TITLE = 'epubS2T v0.1 - by 0_o'
   TXT = 'ZhConversion.txt'
   URL = 'http://svn.wikimedia.org/svnroot/mediawiki/trunk/phase3/includes/ZhConversion.php'
@@ -103,9 +103,10 @@ class App(Tkinter.Frame):
   BTN2 = '更新詞庫'
 
   def __init__(self, parent):
-    Tkinter.Frame.__init__(self, parent)
+    tk.Frame.__init__(self, parent)
     self.parent = parent
     self.initUI()
+    self.init()
     # download ZhConversion.txt if not exist
     #if not os.path.exists(self.TXT):
     #  self.downloadTXT()
@@ -124,25 +125,28 @@ class App(Tkinter.Frame):
     #self.style = ttk.Style()
     #self.style.theme_use('default')
     
-    self.pack(fill=Tkinter.BOTH, expand=1)
+    self.pack(fill=tk.BOTH, expand=1)
 
-    headerLabel = Tkinter.Label(self, text=self.HEAD)
+    headerLabel = tk.Label(self, text=self.HEAD)
     headerLabel.pack()
 
-    frame = Tkinter.Frame(self, relief=Tkinter.RAISED, borderwidth=1)
-    frame.pack(fill=Tkinter.BOTH, expand=1)
+    frame = tk.Frame(self, relief=tk.RAISED, borderwidth=1)
+    frame.pack(fill=tk.BOTH, expand=1)
 
-    self.text = Tkinter.Text(frame, state=Tkinter.DISABLED)
-    scroll = Tkinter.Scrollbar(self.text, command=self.text.yview)
-    scroll.pack(side=Tkinter.RIGHT, fill=Tkinter.Y)
-    self.text.configure(yscrollcommand=scroll.set)
-    self.text.pack(fill=Tkinter.BOTH, expand=1)
+    self.text = tk.Text(frame, state=tk.DISABLED)
+    self.scroll = tk.Scrollbar(self.text, command=self.text.yview)
+    self.scroll.pack(side=tk.RIGHT, fill=tk.Y)
+    self.text.configure(yscrollcommand=self.scroll.set)
+    self.text.pack(fill=tk.BOTH, expand=1)
     
-    downloadButton = Tkinter.Button(self, text=self.BTN2, command=self.downloadTXT)
-    downloadButton.pack(side=Tkinter.LEFT, padx=5, pady=5)
+    downloadButton = tk.Button(self, text=self.BTN2, command=self.downloadTXT)
+    downloadButton.pack(side=tk.LEFT, padx=5, pady=5)
 
-    convertButton = Tkinter.Button(self, text=self.BTN1, command=self.convert)
-    convertButton.pack(side=Tkinter.RIGHT, padx=5, pady=5)
+    self.convertButton = tk.Button(self, text=self.BTN1, state=tk.DISABLED, command=self.convert)
+    self.convertButton.pack(side=tk.RIGHT, padx=5, pady=5)
+
+  def init(self):
+    self.convertButton.configure(state=tk.NORMAL)
 
   def convert(self):
     #self.text.set('123123') 
@@ -157,14 +161,16 @@ class App(Tkinter.Frame):
     output.close()
 
   def println(self, s):
-    self.text.configure(state=Tkinter.NORMAL)
-    self.text.insert(Tkinter.INSERT, '%s\r\n' % s)
-    self.text.configure(state=Tkinter.DISABLED)
+    self.text.configure(state=tk.NORMAL)
+    self.text.insert(tk.INSERT, '%s\r\n' % s)
+    self.text.configure(state=tk.DISABLED)
+    print self.scroll.get()
+    self.scroll.set(0.9, 1.0)
     # TODO: set scrollbar
 
 
 def main():
-  root = Tkinter.Tk()
+  root = tk.Tk()
   app = App(root)
   root.mainloop()
 
