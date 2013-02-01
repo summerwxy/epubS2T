@@ -7,4 +7,6 @@
 用法
 ====
 
-有安裝 python 的電腦, 執行 python epubS2T.py 
+唯一有用處的是 epubS2T.py 可以只下載這個檔案就好
+然後在有安裝 python 的電腦, 執行 python epubS2T.py
+Windows 點兩下, 就可以了.
